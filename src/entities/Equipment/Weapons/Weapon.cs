@@ -9,43 +9,52 @@ using airplanes.entities.Jets;
 
 public abstract class Weapon
 {
-    protected int minDamage { get; set; }
-    protected int maxDamage { get; set; }
-    protected int bonusHitChance { get; set; }
-    protected Ammunition? ammunition { get; set; }
+    protected Int32 MinDamage { get; set; }
+    protected Int32 MaxDamage { get; set; }
+    protected Int32 BonusHitChance { get; set; }
+    protected Ammunition? Ammunition { get; set; }
+    protected Int32 AmmoLeft {get; set;} = 30;
 
-    public virtual int calcDamage()
+    public virtual Int32 CalcDamage()
     {
-        if (ammunition is null)
+        if (Ammunition is null)
         {
             throw new Exception("no ammunition equipped");
         }
-        int damage = Random.Shared.Next(minDamage, maxDamage);
-        damage = ammunition.applyBonusDamage(damage);
+        int damage = Random.Shared.Next(MinDamage, MaxDamage);
+        damage = Ammunition.ApplyBonusDamage(damage);
         return damage;
     }
 
-    public virtual int getBonusHitChance()
+    public virtual Int32 GetBonusHitChance()
     {
-        return bonusHitChance;
+        return BonusHitChance;
     }
 
-    internal virtual void setAmmo(Ammunition ammo)
+    internal virtual void SetAmmo(Ammunition ammo)
     {
-        this.ammunition = ammo;
+        this.Ammunition = ammo;
     }
 
-    public void applyDeduff(Jet targetJet)
+    public void ApplyDeduff(Jet targetJet)
     {
-        if (ammunition is null)
+        if (Ammunition is null)
         {
             throw new Exception("no ammunition equipped");
         }
-        this.ammunition.applyDebuff(targetJet);
+        this.Ammunition.ApplyDebuff(targetJet);
+    }
+
+    internal void SpendAmmo()
+    {
+        if (this.AmmoLeft == 0) {
+            throw new Exception("out of ammo");
+        }
+        this.AmmoLeft--;
     }
 
     public override string ToString()
     {
-        return $"Weapon type: {this.GetType().Name}\n{this.ammunition?.ToString()}";
+        return $"Weapon type: {this.GetType().Name}\n{this.Ammunition?.ToString()}";
     }
 }

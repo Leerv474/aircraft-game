@@ -2,44 +2,44 @@ namespace airplanes.entities.Equipment.Weapons;
 
 using airplanes.entities.Equipment.Ammunition;
 
-public class RocketGun : Weapon
+public class RocketLaunchers : Weapon
 {
-    private int cooldownCnt { get; set; } = 0;
+    private Int32 CooldownCount { get; set; } = 0;
 
-    public RocketGun()
+    public RocketLaunchers()
     {
-        this.minDamage = 10;
-        this.maxDamage = 15;
-        this.bonusHitChance = 1000;
+        this.MinDamage = 10;
+        this.MaxDamage = 15;
+        this.BonusHitChance = 1000;
     }
 
-    public bool onCooldown()
+    public Boolean OnCooldown()
     {
-        if (this.cooldownCnt == 0)
+        if (this.CooldownCount == 0)
         {
-            this.cooldownCnt++;
+            this.CooldownCount++;
             return false;
         }
-        this.cooldownCnt--;
+        this.CooldownCount--;
         return true;
     }
 
-    public override int calcDamage()
+    public override Int32 CalcDamage()
     {
-        return base.calcDamage();
+        return base.CalcDamage();
     }
 
-    public override int getBonusHitChance()
+    public override Int32 GetBonusHitChance()
     {
-        return base.getBonusHitChance();
+        return base.GetBonusHitChance();
     }
 
-    internal override void setAmmo(Ammunition ammunition)
+    internal override void SetAmmo(Ammunition ammunition)
     {
         if (ammunition is TracerRounds)
         {
             throw new Exception("tracer rounds can't be used by rocket gun");
         }
-        this.ammunition = ammunition;
+        this.Ammunition = ammunition;
     }
 }

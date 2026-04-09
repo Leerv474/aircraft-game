@@ -4,11 +4,11 @@ namespace airplanes.entities.Equipment.Ammunition;
 
 public class HeapRounds: Ammunition {
     public HeapRounds() {
-        this.bonusDamage = 18;
+        this.BonusDamage = 18;
     }
 
-    public override void applyDebuff(Jet jet)
+    public override void ApplyDebuff(Jet jet)
     {
-        jet.turnSkip = true;
+        jet.TurnSkip = true;
     }
 }

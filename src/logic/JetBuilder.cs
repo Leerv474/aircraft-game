@@ -6,52 +6,52 @@ using airplanes.types;
 public class JetBuilder
 {
 
-    private JetType jetType { get; set; }
-    private WeaponType weaponType { get; set; }
-    private ArmorType armorType { get; set; }
-    private AmmunitionType ammunitionType { get; set; }
+    private JetType JetType { get; set; }
+    private WeaponType WeaponType { get; set; }
+    private ArmorType ArmorType { get; set; }
+    private AmmunitionType AmmunitionType { get; set; }
 
-    public JetBuilder setJetType(JetType type)
+    public JetBuilder SetJetType(JetType type)
     {
-        this.jetType = type;
+        this.JetType = type;
         return this;
     }
 
-    public JetBuilder setWeaponType(WeaponType type)
+    public JetBuilder SetWeaponType(WeaponType type)
     {
-        bool incompatibleAmmo = this.ammunitionType == AmmunitionType.NONE && type == WeaponType.ROCKETGUNS && this.ammunitionType == AmmunitionType.TRACER;
+        bool incompatibleAmmo = this.AmmunitionType == AmmunitionType.None && type == WeaponType.RocketLaunchers && this.AmmunitionType == AmmunitionType.Tracer;
         if (incompatibleAmmo) {
             throw new Exception("tracer rounds canno be used with rocket guns");
         }
-        this.weaponType = type;
+        this.WeaponType = type;
         return this;
     }
 
-    public JetBuilder setArmorType(ArmorType type)
+    public JetBuilder SetArmorType(ArmorType type)
     {
-        this.armorType = type;
+        this.ArmorType = type;
         return this;
     }
 
-    public JetBuilder setAmmunitionType(AmmunitionType type)
+    public JetBuilder SetAmmunitionType(AmmunitionType type)
     {
-        bool incompatibleAmmo = this.weaponType != WeaponType.NONE && this.weaponType == WeaponType.ROCKETGUNS && type == AmmunitionType.TRACER;
+        bool incompatibleAmmo = this.WeaponType != WeaponType.None && this.WeaponType == WeaponType.RocketLaunchers && type == AmmunitionType.Tracer;
         if (incompatibleAmmo) {
             throw new Exception("tracer rounds canno be used with rocket guns");
         }
-        this.ammunitionType = type;
+        this.AmmunitionType = type;
         return this;
     }
 
-    public Jet build() {
-        bool propertiesMissing = this.jetType == JetType.NONE|| this.weaponType == WeaponType.NONE|| this.ammunitionType == AmmunitionType.NONE|| this.armorType == ArmorType.NONE;
+    public Jet Build() {
+        bool propertiesMissing = this.JetType == JetType.None|| this.WeaponType == WeaponType.None|| this.AmmunitionType == AmmunitionType.None|| this.ArmorType == ArmorType.None;
         if (propertiesMissing) {
             throw new Exception("properties missing");
         }
-        Jet jet = AircraftFactory.createJet(this.jetType);
-        jet.setWeapon(AircraftFactory.createWeapon(this.weaponType));
-        jet.setArmor(AircraftFactory.createArmor(this.armorType));
-        jet.setAmmunition(AircraftFactory.createAmmunition(this.ammunitionType));
+        Jet jet = AircraftFactory.CreateJet(this.JetType);
+        jet.SetWeapon(AircraftFactory.CreateWeapon(this.WeaponType));
+        jet.SetArmor(AircraftFactory.CreateArmor(this.ArmorType));
+        jet.SetAmmunition(AircraftFactory.CreateAmmunition(this.AmmunitionType));
         return jet;
     }
 }

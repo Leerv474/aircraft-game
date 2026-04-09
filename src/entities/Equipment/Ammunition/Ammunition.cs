@@ -4,14 +4,14 @@ using airplanes.entities.Jets;
 
 public abstract class Ammunition
 {
-    protected int bonusDamage { get; set; }
+    protected Int32 BonusDamage { get; set; }
 
-    public int applyBonusDamage(int baseDamage)
+    public Int32 ApplyBonusDamage(Int32 baseDamage)
     {
-        return baseDamage + bonusDamage;
+        return baseDamage + BonusDamage;
     }
 
-    public abstract void applyDebuff(Jet jet);
+    public abstract void ApplyDebuff(Jet jet);
 
     public override string ToString()
     {

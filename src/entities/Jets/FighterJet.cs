@@ -4,29 +4,29 @@ public class FighterJet : Jet
 {
     private int bonusBomberDamage = 20;
     public FighterJet() {
-        this.health = 320;
-        this.evasionChance = 25;
+        this.Health = 320;
+        this.EvasionChance = 25;
     }
 
-    public override void attack(Jet targetJet)
+    public override void Attack(Jet targetJet)
     {
-        if (weapon is null) {
+        if (Weapon is null) {
             throw new Exception("no weapon equipped");
         }
-        if (!this.isTargetHit(targetJet)) {
+        if (!this.IsTargetHit(targetJet)) {
             Console.Write("Target missed");
             return;
         }
 
-        int baseDamage = weapon.calcDamage();
+        int baseDamage = Weapon.CalcDamage();
 
         if (targetJet is BomberJet) {
             baseDamage += (baseDamage * 20) / 100;
         }
-        targetJet.takeDamage(baseDamage);
+        targetJet.TakeDamage(baseDamage);
     }
 
-    public override void takeDamage(int baseDamage) {
-        base.takeDamage(baseDamage);       
+    public override void TakeDamage(Int32 baseDamage) {
+        base.TakeDamage(baseDamage);       
     }
 }

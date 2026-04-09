@@ -2,8 +2,8 @@ namespace airplanes.types;
 
 public enum JetType
 {
-    NONE = 0,
-    FIGHTER,
-    STRIKE,
-    BOMBER,
+    None = 0,
+    Fighter,
+    Strike,
+    Bomber,
 }

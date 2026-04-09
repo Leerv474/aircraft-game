@@ -1,9 +1,12 @@
 namespace airplanes.entities.Equipment.Armor;
 
-public abstract class Armor {
-    protected int protectionValue {get; set;}
-    public int getProtectionValue() {
-        return protectionValue;
+public abstract class Armor
+{
+    protected Int32 ProtectionValue { get; set; }
+
+    public Int32 GetProtectionValue()
+    {
+        return ProtectionValue;
     }
 
     public override string ToString()

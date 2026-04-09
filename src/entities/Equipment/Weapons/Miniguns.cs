@@ -3,17 +3,17 @@ namespace airplanes.entities.Equipment.Weapons;
 public class Miniguns : Weapon
 {
     public Miniguns() {
-        this.minDamage = 10;
-        this.maxDamage = 15;
-        this.bonusHitChance = 15;
+        this.MinDamage = 10;
+        this.MaxDamage = 15;
+        this.BonusHitChance = 15;
     }
-    public override int calcDamage()
+    public override Int32 CalcDamage()
     {
-        return base.calcDamage();
+        return base.CalcDamage();
     }
 
-    public override int getBonusHitChance()
+    public override Int32 GetBonusHitChance()
     {
-        return base.getBonusHitChance();
+        return base.GetBonusHitChance();
     }
 }

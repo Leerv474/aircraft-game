@@ -8,61 +8,61 @@ using airplanes.types;
 
 public static class AircraftFactory
 {
-    private static readonly Dictionary<JetType, Func<Jet>> jetRegistry = new()
+    private static readonly Dictionary<JetType, Func<Jet>> JetRegistry = new()
     {
-        { JetType.FIGHTER, () => new FighterJet() },
-        { JetType.STRIKE, () => new StrikeJet() },
-        { JetType.BOMBER, () => new BomberJet() },
+        { JetType.Fighter, () => new FighterJet() },
+        { JetType.Strike, () => new StrikeJet() },
+        { JetType.Bomber, () => new BomberJet() },
     };
-    private static readonly Dictionary<WeaponType, Func<Weapon>> weaponRegistry = new()
+    private static readonly Dictionary<WeaponType, Func<Weapon>> WeaponRegistry = new()
     {
-        { WeaponType.CANONS, () => new Canons() },
-        { WeaponType.MINIGUNS, () => new Miniguns() },
-        { WeaponType.ROCKETGUNS, () => new RocketGun() },
+        { WeaponType.Canons, () => new Canons() },
+        { WeaponType.Miniguns, () => new Miniguns() },
+        { WeaponType.RocketLaunchers, () => new RocketLaunchers() },
     };
-    private static readonly Dictionary<ArmorType, Func<Armor>> armorRegistry = new()
+    private static readonly Dictionary<ArmorType, Func<Armor>> ArmorRegistry = new()
     {
-        { ArmorType.COCKPIT, () => new ArmoredCockpit() },
-        { ArmorType.FUEL_TANK, () => new ArmoredFuelTank() },
-        { ArmorType.HEAVY, () => new HeavyArmor() },
+        { ArmorType.Cockpit, () => new ArmoredCockpit() },
+        { ArmorType.FuelTank, () => new ArmoredFuelTank() },
+        { ArmorType.Heavy, () => new HeavyArmor() },
     };
-    private static readonly Dictionary<AmmunitionType, Func<Ammunition>> ammunitionRegistry = new()
+    private static readonly Dictionary<AmmunitionType, Func<Ammunition>> AmmunitionRegistry = new()
     {
-        { AmmunitionType.ARMOR_PIERCING, () => new ArmorPiercingRounds() },
-        { AmmunitionType.HEAP, () => new HeapRounds() },
-        { AmmunitionType.TRACER, () => new TracerRounds() },
+        { AmmunitionType.ArmorPiercing, () => new ArmorPiercingRounds() },
+        { AmmunitionType.Heap, () => new HeapRounds() },
+        { AmmunitionType.Tracer, () => new TracerRounds() },
     };
 
-    public static Jet createJet(JetType type)
+    public static Jet CreateJet(JetType type)
     {
-        if (!jetRegistry.TryGetValue(type, out var creator))
+        if (!JetRegistry.TryGetValue(type, out var creator))
         {
             throw new ArgumentException("unknown jet type");
         }
         return creator();
     }
 
-    public static Weapon createWeapon(WeaponType type)
+    public static Weapon CreateWeapon(WeaponType type)
     {
-        if (!weaponRegistry.TryGetValue(type, out var creator))
+        if (!WeaponRegistry.TryGetValue(type, out var creator))
         {
             throw new ArgumentException("unknown jet type");
         }
         return creator();
     }
 
-    public static Armor createArmor(ArmorType type)
+    public static Armor CreateArmor(ArmorType type)
     {
-        if (!armorRegistry.TryGetValue(type, out var creator))
+        if (!ArmorRegistry.TryGetValue(type, out var creator))
         {
             throw new ArgumentException("unknown jet type");
         }
         return creator();
     }
 
-    public static Ammunition createAmmunition(AmmunitionType type)
+    public static Ammunition CreateAmmunition(AmmunitionType type)
     {
-        if (!ammunitionRegistry.TryGetValue(type, out var creator))
+        if (!AmmunitionRegistry.TryGetValue(type, out var creator))
         {
             throw new ArgumentException("unknown jet type");
         }

@@ -3,10 +3,10 @@ using airplanes.logic;
 using airplanes.types;
 
 Jet jet = new JetBuilder()
-    .setJetType(JetType.FIGHTER)
-    .setWeaponType(WeaponType.CANONS)
-    .setAmmunitionType(AmmunitionType.TRACER)
-    .setArmorType(ArmorType.COCKPIT)
-    .build();
+    .SetJetType(JetType.Fighter)
+    .SetWeaponType(WeaponType.Canons)
+    .SetAmmunitionType(AmmunitionType.Tracer)
+    .SetArmorType(ArmorType.Cockpit)
+    .Build();
 
 Console.WriteLine(jet.ToString());

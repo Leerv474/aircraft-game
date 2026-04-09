@@ -6,11 +6,11 @@ public class ArmorPiercingRounds : Ammunition
 {
     public ArmorPiercingRounds()
     {
-        this.bonusDamage = 10;
+        this.BonusDamage = 10;
     }
 
-    public override void applyDebuff(Jet jet)
+    public override void ApplyDebuff(Jet jet)
     {
-        jet.armorPierced = true;
+        jet.ArmorPierced = true;
     }
 }

@@ -5,11 +5,11 @@ using airplanes.entities.Jets;
 public class TracerRounds : Ammunition
 {
     public TracerRounds() {
-        this.bonusDamage = 12;
+        this.BonusDamage = 12;
     }
 
-    public override void applyDebuff(Jet jet)
+    public override void ApplyDebuff(Jet jet)
     {
-        jet.marked = true;
+        jet.Marked = true;
     }
 }

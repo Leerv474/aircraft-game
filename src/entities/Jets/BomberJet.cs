@@ -4,23 +4,23 @@ public class BomberJet : Jet
 {
     public BomberJet()
     {
-        this.health = 680;
-        this.evasionChance = 5;
+        this.Health = 680;
+        this.EvasionChance = 5;
     }
 
-    public override void attack(Jet target)
+    public override void Attack(Jet target)
     {
-        base.attack(target);
+        base.Attack(target);
     }
 
-    public override void takeDamage(int baseDamage)
+    public override void TakeDamage(int baseDamage)
     {
-        base.takeDamage(baseDamage);
+        base.TakeDamage(baseDamage);
     }
 
     public void arealStrike()
     {
-        if (armorPierced) {
+        if (ArmorPierced) {
             return;
         }
         throw new NotImplementedException();

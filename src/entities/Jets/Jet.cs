@@ -6,55 +6,56 @@ using airplanes.entities.Equipment.Weapons;
 
 public abstract class Jet
 {
-    protected int health { get; set; }
-    protected int evasionChance { get; set; }
-    protected Weapon? weapon { get; set; }
-    protected Armor? armor { get; set; }
-    internal bool marked { get; set; } = false;
-    internal bool turnSkip { get; set; } = false;
-    internal bool armorPierced { get; set; } = false;
-    private const int markedBonusHitChance = 15;
+    protected Int32 Health { get; set; }
+    protected Int32 EvasionChance { get; set; }
+    protected Weapon? Weapon { get; set; }
+    protected Armor? Armor { get; set; }
 
-    public virtual void setWeapon(Weapon weapon)
+    internal Boolean Marked { get; set; } = false;
+    internal Boolean TurnSkip { get; set; } = false;
+    internal Boolean ArmorPierced { get; set; } = false;
+    private const Int32 MarkedBonusHitChance = 15;
+
+    public virtual void SetWeapon(Weapon weapon)
     {
-        this.weapon = weapon;
+        this.Weapon = weapon;
     }
 
-    public virtual void setArmor(Armor armor)
+    public virtual void SetArmor(Armor armor)
     {
-        this.armor = armor;
+        this.Armor = armor;
     }
 
-    public void setAmmunition(Ammunition ammo)
+    public void SetAmmunition(Ammunition ammo)
     {
-        if (this.weapon is null)
+        if (this.Weapon is null)
         {
             throw new Exception("weapon isn't equipped");
         }
-        this.weapon.setAmmo(ammo);
+        this.Weapon.SetAmmo(ammo);
     }
 
-    protected bool isTargetHit(Jet targetJet)
+    protected Boolean IsTargetHit(Jet targetJet)
     {
-        if (this.weapon is null)
+        if (this.Weapon is null)
         {
             throw new Exception("weapon isn't equipped");
         }
-        int hitChance = this.weapon.getBonusHitChance();
-        if (targetJet.marked)
+        int hitChance = this.Weapon.GetBonusHitChance();
+        if (targetJet.Marked)
         {
-            hitChance += markedBonusHitChance;
-            this.marked = false;
+            hitChance += MarkedBonusHitChance;
+            this.Marked = false;
         }
-        if (targetJet.armor is HeavyArmor)
+        if (targetJet.Armor is HeavyArmor)
         {
-            hitChance += HeavyArmor.evasionPenalty;
+            hitChance += HeavyArmor.EvasionPenalty;
         }
 
-        this.evasionChance -= hitChance;
+        this.EvasionChance -= hitChance;
 
         int rnd = Random.Shared.Next(0, 100);
-        if (rnd >= evasionChance)
+        if (rnd >= EvasionChance)
         {
             return true;
         }
@@ -62,54 +63,55 @@ public abstract class Jet
         return false;
     }
 
-    public virtual void attack(Jet targetJet)
+    public virtual void Attack(Jet targetJet)
     {
-        if (weapon is null)
+        if (Weapon is null)
         {
             throw new Exception("no weapon equipped");
         }
-        if (!this.isTargetHit(targetJet))
+        this.Weapon.SpendAmmo();
+        if (!this.IsTargetHit(targetJet))
         {
             Console.Write("Target missed");
             return;
         }
 
-        weapon.applyDeduff(targetJet);
-        int baseDamage = weapon.calcDamage();
+        Weapon.ApplyDeduff(targetJet);
+        int baseDamage = Weapon.CalcDamage();
 
-        targetJet.takeDamage(baseDamage);
-        if (weapon is Canons)
+        targetJet.TakeDamage(baseDamage);
+        if (Weapon is Canons)
         {
-            if (!this.isTargetHit(targetJet))
+            if (!this.IsTargetHit(targetJet))
             {
                 Console.Write("Target missed");
                 return;
             }
-            weapon.applyDeduff(targetJet);
-            baseDamage = weapon.calcDamage();
+            Weapon.ApplyDeduff(targetJet);
+            baseDamage = Weapon.CalcDamage();
 
-            targetJet.takeDamage(baseDamage);
+            targetJet.TakeDamage(baseDamage);
         }
     }
 
-    public virtual void takeDamage(int baseDamage)
+    public virtual void TakeDamage(Int32 baseDamage)
     {
-        if (armor is null)
+        if (Armor is null)
         {
             throw new Exception("no armor equipped");
         }
         int finalDamage = baseDamage;
 
-        if (!this.armorPierced)
+        if (!this.ArmorPierced)
         {
-            finalDamage = (baseDamage * this.armor.getProtectionValue()) / 100;
+            finalDamage = (baseDamage * this.Armor.GetProtectionValue()) / 100;
         }
-        this.health -= finalDamage;
+        this.Health -= finalDamage;
     }
 
 
     public override string ToString()
     {
-        return $"---Jet type: {this.GetType().Name}---\n{this.weapon?.ToString()}\n{this.armor?.ToString()}\n---";
+        return $"---Jet type: {this.GetType().Name}---\n{this.Weapon?.ToString()}\n{this.Armor?.ToString()}\n---";
     }
 }
