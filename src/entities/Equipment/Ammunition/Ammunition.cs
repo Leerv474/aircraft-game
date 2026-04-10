@@ -6,9 +6,9 @@ public abstract class Ammunition
 {
     protected Int32 BonusDamage { get; set; }
 
-    public Int32 ApplyBonusDamage(Int32 baseDamage)
+    public Int32 GetBonusDamage()
     {
-        return baseDamage + BonusDamage;
+        return BonusDamage;
     }
 
     public abstract void ApplyDebuff(Jet jet);

@@ -11,16 +11,6 @@ public class BomberJet : Jet
         this.Type = JetType.Bomber;
     }
 
-    public override void Attack(Jet target)
-    {
-        base.Attack(target);
-    }
-
-    public override void TakeDamage(int baseDamage)
-    {
-        base.TakeDamage(baseDamage);
-    }
-
     public void ArealStrike()
     {
         if (ArmorPierced) {

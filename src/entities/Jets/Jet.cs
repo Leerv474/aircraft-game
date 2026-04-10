@@ -3,28 +3,32 @@ namespace airplanes.entities.Jets;
 using airplanes.entities.Equipment.Ammunition;
 using airplanes.entities.Equipment.Armor;
 using airplanes.entities.Equipment.Weapons;
+using airplanes.entities.FiredShots;
 using airplanes.types;
 
 public abstract class Jet
 {
-    private Int32 ID { get; set; }
     protected Int32 Health { get; set; }
     protected Int32 EvasionChance { get; set; }
     protected Weapon? PrimaryWeapon { get; set; }
     protected Weapon? SecondaryWeapon { get; set; }
-    protected Armor? Armor { get; set; }
+    public Armor? Armor { get; private set;}
     protected Ammunition? Ammunition { get; set; }
     protected JetType Type { get; set; }
 
-    internal Boolean Marked { get; set; } = false;
+    public Boolean Marked { get; set; } = false;
     internal Boolean TurnSkip { get; set; } = false;
     internal Boolean ArmorPierced { get; set; } = false;
-    private const Int32 MarkedBonusHitChance = 15;
+    public const Int32 MarkedBonusHitChance = 15;
     private Int32 AmmunitionLeft { get; set; } = 30;
 
-    public Int32 GetID()
+    public Boolean IsDead()
     {
-        return this.ID;
+        return this.Health <= 0;
+    }
+
+    public Int32 GetCurrentHealth() {
+        return this.Health;
     }
 
     public virtual void SetPrimaryWeapon(Weapon weapon)
@@ -56,107 +60,110 @@ public abstract class Jet
         this.Ammunition.ApplyDebuff(targetJet);
     }
 
-    protected Boolean IsTargetHit(Jet targetJet, Weapon weaponUsed)
+    public Weapon GetPrimaryWeapon()
     {
-        int hitChance = weaponUsed.GetBonusHitChance();
-        if (targetJet.Marked)
+        if (this.PrimaryWeapon is null)
         {
-            hitChance += MarkedBonusHitChance;
-            this.Marked = false;
+            throw new Exception("no primary weapon equipped");
         }
-        if (targetJet.Armor is HeavyArmor)
-        {
-            hitChance += HeavyArmor.EvasionPenalty;
-        }
-
-        this.EvasionChance -= hitChance;
-
-        int rnd = Random.Shared.Next(0, 100);
-        if (rnd >= EvasionChance)
-        {
-            return true;
-        }
-
-        return false;
+        return this.PrimaryWeapon;
     }
 
-    public virtual void Attack(Jet targetJet)
+    public Weapon GetSecondaryWeapon()
+    {
+        if (this.PrimaryWeapon is null)
+        {
+            throw new Exception("no secondary weapon equipped");
+        }
+        return this.PrimaryWeapon;
+    }
+
+    public virtual Int32 GetArmorEvasionPenalty()
+    {
+        if (this.Armor is null)
+        {
+            throw new Exception("no armor equipped");
+        }
+        return this.Armor.GetEvasionPenalty();
+    }
+
+    public virtual Int32 GetEvasionChance()
+    {
+        return this.EvasionChance;
+    }
+
+    public virtual List<FiredShot> Attack(Jet targetJet)
     {
         if (PrimaryWeapon is null)
         {
             throw new Exception("no primary weapon equipped");
         }
+        List<FiredShot> firedShots = new();
+        var shot = this.Shoot(targetJet, this.PrimaryWeapon);
+        if (shot is not null)
+        {
+            firedShots.Add(shot);
+        }
+
+        if (this.PrimaryWeapon is Canons) {
+            shot = this.Shoot(targetJet, this.PrimaryWeapon);
+            if (shot is not null)
+            {
+                firedShots.Add(shot);
+            }
+        }
+
         if (SecondaryWeapon is null)
         {
             throw new Exception("no secondary weapon equipped");
         }
-        this.Shoot(targetJet, this.PrimaryWeapon);
-        this.Shoot(targetJet, this.SecondaryWeapon);
-    }
-
-    private void firingCapabilityCheck(Weapon weaponUsed)
-    {
-        if (Ammunition is null)
+        shot = this.Shoot(targetJet, this.SecondaryWeapon);
+        if (shot is not null)
         {
-            throw new Exception("no ammunition equipped");
+            firedShots.Add(shot);
         }
-        if (Ammunition is TracerRounds && weaponUsed is RocketLaunchers)
-        {
-            throw new Exception("incompatible ammo type");
-        }
-        if (this.AmmunitionLeft == 0)
-        {
-            throw new Exception("out of ammo");
-        }
-    }
-
-    protected virtual void Shoot(Jet targetJet, Weapon weaponUsed)
-    {
-        firingCapabilityCheck(weaponUsed);
-        this.AmmunitionLeft--;
-        if (!this.IsTargetHit(targetJet, weaponUsed))
-        {
-            return;
-        }
-
-        this.ApplyDeduff(targetJet);
-        int baseDamage = weaponUsed.CalcDamage();
-        this.Ammunition?.ApplyBonusDamage(baseDamage);
-
-        targetJet.TakeDamage(baseDamage);
-
-        if (weaponUsed is Canons)
-        {
-            if (!this.IsTargetHit(targetJet, weaponUsed))
+        if (this.SecondaryWeapon is Canons) {
+            shot = this.Shoot(targetJet, this.SecondaryWeapon);
+            if (shot is not null)
             {
-                Console.Write("Target missed");
-                return;
+                firedShots.Add(shot);
             }
-            this.ApplyDeduff(targetJet);
-            baseDamage = weaponUsed.CalcDamage();
-
-            targetJet.TakeDamage(baseDamage);
         }
+        return firedShots;
     }
 
-    public virtual void TakeDamage(Int32 baseDamage)
+    private Boolean IsCapableOfFiring(Weapon weaponUsed)
     {
-        if (Armor is null)
+        bool isCapable =
+            Ammunition is null
+            || Ammunition is TracerRounds && weaponUsed is RocketLaunchers
+            || this.AmmunitionLeft == 0;
+        if (isCapable)
         {
-            throw new Exception("no armor equipped");
+            return false;
         }
-        int finalDamage = baseDamage;
+        return true;
+    }
 
-        if (!this.ArmorPierced)
+    protected virtual FiredShot? Shoot(Jet target, Weapon weaponUsed)
+    {
+        if (!this.IsCapableOfFiring(weaponUsed))
         {
-            finalDamage = (baseDamage * this.Armor.GetProtectionValue()) / 100;
+            return null;
         }
-        this.Health -= finalDamage;
+        this.AmmunitionLeft--;
+
+        return new FiredShot(this, weaponUsed, target, this.Ammunition);
+    }
+
+    public virtual void TakeDamage(Int32 damage)
+    {
+        this.Health -= damage;
     }
 
     public override string ToString()
     {
         // return $"---Jet type: {this.GetType().Name}---\n{this.PrimaryWeapon?.ToString()}\n{this.SecondaryWeapon?.ToString()}\n{this.Ammunition?.ToString()}\n{this.Armor?.ToString()}\n---";
-        return $"---Jet type: {this.GetType().Name}---\nID: {this.ID}\nHealth: {this.Health}\n---";
+        return $"---Jet type: {this.GetType().Name}---\nHealth: {this.Health}\n---";
     }
 }
