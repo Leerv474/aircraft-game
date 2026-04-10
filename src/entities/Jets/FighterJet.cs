@@ -1,32 +1,36 @@
 namespace airplanes.entities.Jets;
+using airplanes.entities.Equipment.Weapons;
+using airplanes.types;
 
 public class FighterJet : Jet
 {
-    private int bonusBomberDamage = 20;
-    public FighterJet() {
+    private int BonusBomberDamage = 20;
+
+    public FighterJet()
+    {
         this.Health = 320;
         this.EvasionChance = 25;
+        this.Type = JetType.Fighter;
     }
 
-    public override void Attack(Jet targetJet)
+    protected override void Shoot(Jet targetJet, Weapon weaponUsed)
     {
-        if (Weapon is null) {
-            throw new Exception("no weapon equipped");
-        }
-        if (!this.IsTargetHit(targetJet)) {
-            Console.Write("Target missed");
+        if (!this.IsTargetHit(targetJet, weaponUsed))
+        {
             return;
         }
 
-        int baseDamage = Weapon.CalcDamage();
+        int baseDamage = weaponUsed.CalcDamage();
 
-        if (targetJet is BomberJet) {
-            baseDamage += (baseDamage * 20) / 100;
+        if (targetJet is BomberJet)
+        {
+            baseDamage += (baseDamage * this.BonusBomberDamage) / 100;
         }
         targetJet.TakeDamage(baseDamage);
     }
 
-    public override void TakeDamage(Int32 baseDamage) {
-        base.TakeDamage(baseDamage);       
+    public override void TakeDamage(Int32 baseDamage)
+    {
+        base.TakeDamage(baseDamage);
     }
 }

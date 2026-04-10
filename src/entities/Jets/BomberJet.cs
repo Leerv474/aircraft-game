@@ -1,3 +1,5 @@
+using airplanes.types;
+
 namespace airplanes.entities.Jets;
 
 public class BomberJet : Jet
@@ -6,6 +8,7 @@ public class BomberJet : Jet
     {
         this.Health = 680;
         this.EvasionChance = 5;
+        this.Type = JetType.Bomber;
     }
 
     public override void Attack(Jet target)
@@ -18,7 +21,7 @@ public class BomberJet : Jet
         base.TakeDamage(baseDamage);
     }
 
-    public void arealStrike()
+    public void ArealStrike()
     {
         if (ArmorPierced) {
             return;

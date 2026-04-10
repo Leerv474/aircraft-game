@@ -14,6 +14,6 @@ public class Canons : Weapon
 
     public override Int32 GetBonusHitChance()
     {
-        throw new NotImplementedException();
+        return this.BonusHitChance;
     }
 }

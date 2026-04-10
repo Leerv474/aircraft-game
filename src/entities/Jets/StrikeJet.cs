@@ -1,4 +1,5 @@
 namespace airplanes.entities.Jets;
+using airplanes.types;
 
 public class StrikeJet : Jet
 {
@@ -6,6 +7,7 @@ public class StrikeJet : Jet
     public StrikeJet() {
         this.Health = 480;
         this.EvasionChance = 10;
+        this.Type = JetType.Strike;
     }
     public override void Attack(Jet target)
     {

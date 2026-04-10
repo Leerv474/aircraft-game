@@ -1,5 +1,4 @@
 namespace airplanes.entities.Equipment.Weapons;
-
 using airplanes.entities.Equipment.Ammunition;
 
 public class RocketLaunchers : Weapon
@@ -34,12 +33,8 @@ public class RocketLaunchers : Weapon
         return base.GetBonusHitChance();
     }
 
-    internal override void SetAmmo(Ammunition ammunition)
+    public override Boolean AmmoIsCompatible(Ammunition ammo)
     {
-        if (ammunition is TracerRounds)
-        {
-            throw new Exception("tracer rounds can't be used by rocket gun");
-        }
-        this.Ammunition = ammunition;
+        return ammo is not TracerRounds;
     }
 }

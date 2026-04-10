@@ -7,7 +7,8 @@ public class JetBuilder
 {
 
     private JetType JetType { get; set; }
-    private WeaponType WeaponType { get; set; }
+    private WeaponType PrimaryWeaponType { get; set; }
+    private WeaponType SecondaryWeaponType { get; set; }
     private ArmorType ArmorType { get; set; }
     private AmmunitionType AmmunitionType { get; set; }
 
@@ -17,13 +18,22 @@ public class JetBuilder
         return this;
     }
 
-    public JetBuilder SetWeaponType(WeaponType type)
+    public JetBuilder SetPrimaryWeaponType(WeaponType type)
     {
         bool incompatibleAmmo = this.AmmunitionType == AmmunitionType.None && type == WeaponType.RocketLaunchers && this.AmmunitionType == AmmunitionType.Tracer;
         if (incompatibleAmmo) {
             throw new Exception("tracer rounds canno be used with rocket guns");
         }
-        this.WeaponType = type;
+        this.PrimaryWeaponType = type;
+        return this;
+    }
+    public JetBuilder SetSecondaryWeaponType(WeaponType type)
+    {
+        bool incompatibleAmmo = this.AmmunitionType == AmmunitionType.None && type == WeaponType.RocketLaunchers && this.AmmunitionType == AmmunitionType.Tracer;
+        if (incompatibleAmmo) {
+            throw new Exception("tracer rounds canno be used with rocket guns");
+        }
+        this.SecondaryWeaponType= type;
         return this;
     }
 
@@ -35,7 +45,7 @@ public class JetBuilder
 
     public JetBuilder SetAmmunitionType(AmmunitionType type)
     {
-        bool incompatibleAmmo = this.WeaponType != WeaponType.None && this.WeaponType == WeaponType.RocketLaunchers && type == AmmunitionType.Tracer;
+        bool incompatibleAmmo = this.PrimaryWeaponType != WeaponType.None && this.PrimaryWeaponType == WeaponType.RocketLaunchers && type == AmmunitionType.Tracer;
         if (incompatibleAmmo) {
             throw new Exception("tracer rounds canno be used with rocket guns");
         }
@@ -44,12 +54,13 @@ public class JetBuilder
     }
 
     public Jet Build() {
-        bool propertiesMissing = this.JetType == JetType.None|| this.WeaponType == WeaponType.None|| this.AmmunitionType == AmmunitionType.None|| this.ArmorType == ArmorType.None;
+        bool propertiesMissing = this.JetType == JetType.None|| this.PrimaryWeaponType == WeaponType.None|| this.AmmunitionType == AmmunitionType.None|| this.ArmorType == ArmorType.None;
         if (propertiesMissing) {
             throw new Exception("properties missing");
         }
         Jet jet = AircraftFactory.CreateJet(this.JetType);
-        jet.SetWeapon(AircraftFactory.CreateWeapon(this.WeaponType));
+        jet.SetPrimaryWeapon(AircraftFactory.CreateWeapon(this.PrimaryWeaponType));
+        jet.SetSecondaryWeapon(AircraftFactory.CreateWeapon(this.SecondaryWeaponType));
         jet.SetArmor(AircraftFactory.CreateArmor(this.ArmorType));
         jet.SetAmmunition(AircraftFactory.CreateAmmunition(this.AmmunitionType));
         return jet;
